@@ -1,0 +1,426 @@
+openapi: 3.0.3
+info:
+  title: DriveVault REST API
+  description: >
+    DriveVault Backend API — Multi-role user authentication, vehicle CRUD,
+    advanced multi-criteria search, and inventory management system.
+  version: 1.0.0
+servers:
+  - url: http://localhost:5000/api
+    description: Standard API Base URL
+  - url: http://localhost:5000/api/v1
+    description: Versioned API Base URL (v1)
+
+paths:
+  /health:
+    get:
+      summary: System Health Check
+      description: Returns health status, uptime, and current server timestamp.
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              example:
+                status: ok
+                uptime: 123.45
+                timestamp: "2026-07-29T12:00:00.000Z"
+
+  /auth/register:
+    post:
+      summary: Register a new user account
+      description: Default role assigned is VIEWER.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, email, password]
+              properties:
+                name:
+                  type: string
+                  example: Jane Smith
+                email:
+                  type: string
+                  format: email
+                  example: jane.smith@example.com
+                password:
+                  type: string
+                  format: password
+                  minLength: 8
+                  example: SecurePass1!
+      responses:
+        '201':
+          description: User registered successfully
+        '409':
+          description: Email address already registered
+        '422':
+          description: Validation error
+
+  /auth/login:
+    post:
+      summary: User Login
+      description: Authenticates user credentials and returns JWT access and refresh tokens.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: jane.smith@example.com
+                password:
+                  type: string
+                  format: password
+                  example: SecurePass1!
+      responses:
+        '200':
+          description: Authentication successful
+        '401':
+          description: Invalid email or password
+        '422':
+          description: Validation error
+
+  /vehicles:
+    get:
+      summary: List vehicles with filters & pagination
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+        - in: query
+          name: make
+          schema:
+            type: string
+        - in: query
+          name: model
+          schema:
+            type: string
+        - in: query
+          name: category
+          schema:
+            type: string
+        - in: query
+          name: minPrice
+          schema:
+            type: string
+        - in: query
+          name: maxPrice
+          schema:
+            type: string
+        - in: query
+          name: year
+          schema:
+            type: integer
+        - in: query
+          name: sortBy
+          schema:
+            type: string
+            enum: [price, year, make, model, createdAt, updatedAt]
+        - in: query
+          name: sortOrder
+          schema:
+            type: string
+            enum: [asc, desc]
+      responses:
+        '200':
+          description: Paginated list of vehicles
+        '401':
+          description: Unauthorized
+        '422':
+          description: Validation error
+
+    post:
+      summary: Add a new vehicle (ADMIN / STAFF)
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVehicleDto'
+      responses:
+        '201':
+          description: Vehicle created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden (requires ADMIN or STAFF role)
+        '422':
+          description: Validation error
+
+  /vehicles/search:
+    get:
+      summary: Advanced multi-criteria search with pagination and sorting
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: make
+          schema:
+            type: string
+        - in: query
+          name: model
+          schema:
+            type: string
+        - in: query
+          name: category
+          schema:
+            type: string
+        - in: query
+          name: powertrain
+          schema:
+            type: string
+        - in: query
+          name: minPrice
+          schema:
+            type: string
+        - in: query
+          name: maxPrice
+          schema:
+            type: string
+        - in: query
+          name: year
+          schema:
+            type: integer
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+        - in: query
+          name: sortBy
+          schema:
+            type: string
+            enum: [price, year, make, model, createdAt, updatedAt]
+        - in: query
+          name: sortOrder
+          schema:
+            type: string
+            enum: [asc, desc]
+      responses:
+        '200':
+          description: Search results matching filters
+        '401':
+          description: Unauthorized
+        '422':
+          description: Invalid query parameters
+
+  /vehicles/{id}:
+    get:
+      summary: Get vehicle by ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Vehicle details
+        '401':
+          description: Unauthorized
+        '404':
+          description: Vehicle not found
+
+    put:
+      summary: Full replace update vehicle details (ADMIN / STAFF)
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVehicleDto'
+      responses:
+        '200':
+          description: Vehicle updated
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Vehicle not found
+        '422':
+          description: Validation error
+
+    patch:
+      summary: Partial update vehicle details (ADMIN / STAFF)
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                price:
+                  type: string
+                quantity:
+                  type: integer
+      responses:
+        '200':
+          description: Vehicle updated
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Vehicle not found
+
+    delete:
+      summary: Soft-delete vehicle (ADMIN only)
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Vehicle soft-deleted
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden (ADMIN only)
+        '404':
+          description: Vehicle not found
+
+  /vehicles/{id}/purchase:
+    post:
+      summary: Purchase vehicle (decreases quantity by 1)
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Purchase successful
+        '401':
+          description: Unauthorized
+        '404':
+          description: Vehicle not found
+        '409':
+          description: Conflict (vehicle is out of stock)
+
+  /vehicles/{id}/restock:
+    post:
+      summary: Restock vehicle inventory (ADMIN only)
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [quantity]
+              properties:
+                quantity:
+                  type: integer
+                  minimum: 1
+                  example: 10
+      responses:
+        '200':
+          description: Vehicle inventory restocked
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden (ADMIN only)
+        '404':
+          description: Vehicle not found
+        '422':
+          description: Validation error
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    CreateVehicleDto:
+      type: object
+      required: [make, model, year, category, price, quantity]
+      properties:
+        make:
+          type: string
+          example: Toyota
+        model:
+          type: string
+          example: Camry
+        year:
+          type: integer
+          example: 2023
+        category:
+          type: string
+          enum: [SEDAN, SUV, TRUCK, HATCHBACK, CONVERTIBLE, COUPE, VAN, MOTORCYCLE]
+          example: SEDAN
+        powertrain:
+          type: string
+          enum: [PETROL, DIESEL, ELECTRIC, HYBRID, PHEV, HYDROGEN, OTHER]
+          default: PETROL
+          example: PETROL
+        price:
+          type: string
+          example: "28500.00"
+        quantity:
+          type: integer
+          minimum: 0
+          default: 1
+          example: 5
+        color:
+          type: string
+          example: Midnight Black
+        mileage:
+          type: integer
+          example: 0
