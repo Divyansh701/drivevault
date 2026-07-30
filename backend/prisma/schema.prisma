@@ -1,0 +1,177 @@
+// =============================================================================
+// Prisma Schema — Car Dealership Inventory System
+// Generator : prisma-client-js
+// Database  : PostgreSQL
+// =============================================================================
+//
+// TABLE SUMMARY
+// ─────────────────────────────────────────────────────────────────────────────
+//  users     — People who can log in and manage inventory
+//  vehicles  — Cars / trucks for sale in the dealership
+// =============================================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// =============================================================================
+// ENUMS
+// =============================================================================
+
+/// The permission level of a user account.
+enum Role {
+  ADMIN   // Full system access: manage users, vehicles, all CRUD operations
+  STAFF   // Operational access: add and edit vehicles; cannot manage users
+  VIEWER  // Read-only access: can view inventory but cannot make changes
+}
+
+/// Body-style classification of a vehicle.
+///
+/// Fix ISSUE-04: ELECTRIC and HYBRID were removed from this enum because they
+/// describe the *powertrain*, not the *body style*. A Tesla Model Y is an SUV
+/// with an electric powertrain; a RAV4 Hybrid is an SUV with a hybrid
+/// powertrain. Conflating the two concepts made filtering incorrect — a query
+/// for `category = SUV` would miss electric SUVs if they were stored as
+/// `ELECTRIC`. Powertrain is now a separate `PowertrainType` enum.
+enum VehicleCategory {
+  SEDAN        // Traditional 3-box saloon (e.g. Toyota Camry)
+  SUV          // Sport Utility Vehicle (e.g. Ford Explorer, Tesla Model Y)
+  TRUCK        // Pickup / light commercial (e.g. Ford F-150)
+  HATCHBACK    // Compact car with rear hatch (e.g. Honda Civic HB)
+  CONVERTIBLE  // Retractable roof (e.g. BMW 4-Series Convertible)
+  COUPE        // 2-door sporty body (e.g. BMW M4)
+  VAN          // Cargo or passenger van (e.g. Mercedes Sprinter)
+  MOTORCYCLE   // Two-wheeled motorised vehicle
+}
+
+/// Fuel / drive system of a vehicle — orthogonal to body style.
+///
+/// Separated from VehicleCategory so both axes can be queried independently.
+/// Example: find all electric SUVs → category=SUV AND powertrain=ELECTRIC.
+enum PowertrainType {
+  PETROL    // Internal combustion engine running on petrol/gasoline
+  DIESEL    // Internal combustion engine running on diesel
+  ELECTRIC  // Fully battery-electric — no combustion engine
+  HYBRID    // Combined petrol + electric powertrain (self-charging)
+  PHEV      // Plug-in hybrid electric vehicle
+  HYDROGEN  // Fuel-cell / hydrogen combustion
+  OTHER     // Any other powertrain not listed above
+}
+
+/// Lifecycle state of a vehicle in the dealership.
+enum VehicleStatus {
+  AVAILABLE    // On the lot, ready for sale
+  RESERVED     // Held for a pending customer — not yet sold
+  SOLD         // Ownership transferred; kept for historical records
+  MAINTENANCE  // Off the lot for servicing; not available for sale
+}
+
+// =============================================================================
+// TABLE: users
+// =============================================================================
+//
+// Stores all authenticated principals — admins, staff, and read-only viewers.
+// Passwords are stored as bcrypt hashes; plaintext is never persisted.
+//
+// FIELDS
+// ──────
+//  id        — CUID surrogate primary key.
+//  name      — Full display name (e.g. "Jane Smith").
+//  email     — Login identifier. Unique. Stored lowercase by convention.
+//  password  — bcrypt hash (cost ≥ 10). Never store/return plaintext.
+//  role      — Permission level. Defaults to VIEWER (minimum privilege).
+//  isActive  — Soft enable/disable. Inactive users cannot log in.
+//  createdAt — Set once at insert; never updated.
+//  updatedAt — Auto-updated by Prisma on every write.
+//  deletedAt — Soft-delete marker: NULL = active.
+
+model User {
+  id        String    @id @default(cuid())
+  name      String
+  email     String    @unique
+  password  String
+  role      Role      @default(VIEWER)
+  isActive  Boolean   @default(true)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  // Fix ISSUE-09: @@index([email]) removed — the @unique constraint on email
+  // already creates an implicit B-tree index. A second non-unique index on the
+  // same column is redundant; PostgreSQL never uses both and the duplicate
+  // wastes storage and slows writes.
+  @@index([role])
+  @@index([deletedAt])
+  @@map("users")
+}
+
+// =============================================================================
+// TABLE: vehicles
+// =============================================================================
+//
+// Core inventory table. Every car, truck, or motorcycle for sale is a row.
+//
+// FIELDS
+// ──────
+//  id           — CUID surrogate primary key.
+//  make         — Manufacturer brand name (e.g. "Toyota", "BMW", "Ford").
+//  model        — Specific model line (e.g. "Camry", "3 Series", "F-150").
+//  year         — 4-digit model year (e.g. 2024).
+//  category     — Body-style classification (VehicleCategory enum).
+//  powertrain   — Fuel/drive type (PowertrainType enum). Defaults to PETROL.
+//  price        — Asking price. DECIMAL(12,2) avoids floating-point drift.
+//  quantity     — Units in stock. Defaults to 1. CHECK ensures ≥ 0.
+//  vin          — 17-char Vehicle Identification Number. Optional (bulk import).
+//  color        — Exterior paint colour. Optional.
+//  mileage      — Odometer in kilometres. 0 for new vehicles.
+//  description  — Marketing copy. TEXT (no length limit).
+//  status       — Listing lifecycle state.
+//  imageUrls    — Array of CDN image URLs.
+//  createdAt    — Set once at insert.
+//  updatedAt    — Auto-updated by Prisma.
+//  deletedAt    — Soft-delete marker: NULL = active.
+
+model Vehicle {
+  id          String          @id @default(cuid())
+
+  // ── Core required fields ──────────────────────────────────────────────────
+  make        String
+  model       String
+  year        Int
+  category    VehicleCategory
+  price       Decimal         @db.Decimal(12, 2)
+  quantity    Int             @default(1)
+
+  // ── Fix ISSUE-04: powertrain is now a separate field ──────────────────────
+  powertrain  PowertrainType  @default(PETROL)
+
+  // ── Additional production fields ──────────────────────────────────────────
+  vin         String?         @unique
+  color       String?
+  mileage     Int             @default(0)
+  description String?         @db.Text
+  status      VehicleStatus   @default(AVAILABLE)
+  imageUrls   String[]        @default([])
+
+  // ── Audit timestamps ───────────────────────────────────────────────────────
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  deletedAt   DateTime?
+
+  // ── Indexes ───────────────────────────────────────────────────────────────
+  @@index([make])
+  @@index([category])
+  @@index([powertrain])
+  @@index([status])
+  @@index([year])
+  @@index([price])
+  @@index([deletedAt])
+
+  @@map("vehicles")
+}
