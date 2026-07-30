@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthLayout } from '@/components/auth/AuthLayout';
-import { FormField, Button, Alert } from '@/components/ui';
+import { FormField, Alert } from '@/components/ui';
 import { useAuth } from '@/context';
 import { authService } from '@/services';
 import type { ApiError } from '@/types';

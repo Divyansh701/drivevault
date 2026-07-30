@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { useVehicles } from '@/hooks/useVehicles';
 
@@ -43,7 +43,6 @@ export default function StaffAnalyticsPage() {
   const ptData = POWERTRAINS.map(p => ({ label: p, value: vehicles.filter(v => v.powertrain === p).length }));
   const maxPt = Math.max(...ptData.map(p => p.value), 1);
 
-  const fmt = (n: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
   const fmtC = (n: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', notation: 'compact', maximumFractionDigits: 1 }).format(n);
 
   return (

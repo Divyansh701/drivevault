@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { useAuth } from '@/context';
 import { dealService } from '@/services';
 import { Alert, ConfirmDialog, MetricCard, ActionBtn } from '@/components/ui';
 import { DealFormModal } from '@/components/admin';
-import type { Deal, DealQueryParams, DealStatus } from '@/types';
+import type { Deal, DealStatus } from '@/types';
 
 const NAV = [
   { label: 'Overview', href: '/staff', icon: <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth={1.75} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5" /></svg> },

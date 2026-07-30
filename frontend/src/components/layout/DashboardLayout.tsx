@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context';
+import type { AppRole } from '@/types';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface NavItem {
@@ -13,16 +14,18 @@ interface NavItem {
 interface DashboardLayoutProps {
   children: React.ReactNode;
   navItems: NavItem[];
-  role: 'ADMIN' | 'STAFF' | 'VIEWER';
+  role: AppRole;
   title: string;
   subtitle: string;
 }
 
 // ─── Role colours ─────────────────────────────────────────────────────────────
-const ROLE_COLOR = {
+const ROLE_COLOR: Record<AppRole, { primary: string; glow: string; border: string }> = {
   ADMIN:  { primary: '#e879f9', glow: 'rgba(232,121,249,0.2)', border: 'rgba(232,121,249,0.25)' },
   STAFF:  { primary: '#C9A84C', glow: 'rgba(201,168,76,0.2)',  border: 'rgba(201,168,76,0.25)'  },
+  DEALER: { primary: '#f59e0b', glow: 'rgba(245,158,11,0.2)', border: 'rgba(245,158,11,0.25)' },
   VIEWER: { primary: '#38bdf8', glow: 'rgba(56,189,248,0.2)',  border: 'rgba(56,189,248,0.25)'  },
+  CUSTOMER: { primary: '#34d399', glow: 'rgba(52,211,153,0.2)', border: 'rgba(52,211,153,0.25)' },
 };
 
 // ─── DashboardLayout ──────────────────────────────────────────────────────────
@@ -33,8 +36,8 @@ export function DashboardLayout({ children, navItems, role, title, subtitle }: D
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const resolvedRole = (role?.toUpperCase() as keyof typeof ROLE_COLOR) ?? 'VIEWER';
-  const col = ROLE_COLOR[resolvedRole] ?? ROLE_COLOR.VIEWER;
+  const resolvedRole: AppRole = role ?? 'VIEWER';
+  const col = ROLE_COLOR[resolvedRole];
 
   const handleLogout = () => {
     logout();

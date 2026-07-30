@@ -109,11 +109,13 @@ export interface DealListResponse {
 
 // ─── Auth ─────────────────────────────────────────────────────────────────────
 
+export type AppRole = 'ADMIN' | 'STAFF' | 'DEALER' | 'VIEWER' | 'CUSTOMER';
+
 export interface User {
   id: string;
   email: string;
   name: string;
-  role: 'ADMIN' | 'STAFF' | 'DEALER' | 'VIEWER' | 'CUSTOMER';
+  role: AppRole;
   createdAt: string;
 }
 

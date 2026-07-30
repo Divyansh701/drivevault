@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { dealService } from '@/services';
 import type { Deal } from '@/types';
 

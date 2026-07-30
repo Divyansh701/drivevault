@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { useAuth } from '@/context';
 import { VehicleFormModal, RestockModal } from '@/components/admin';
-import { Alert, Button, ConfirmDialog } from '@/components/ui';
+import { Alert, ConfirmDialog } from '@/components/ui';
 import { useVehicles } from '@/hooks/useVehicles';
 import { vehicleService } from '@/services/vehicleService';
 import type { Vehicle, VehicleQueryParams } from '@/types';
@@ -53,7 +53,7 @@ const MOCK_USERS = [
 // ─── Inventory sub-view ───────────────────────────────────────────────────────
 function InventoryView() {
   const [params] = React.useState<VehicleQueryParams>({ page: 1, limit: 50, sortBy: 'createdAt', sortOrder: 'desc' });
-  const { vehicles, total, isLoading, refetch } = useVehicles(params);
+  const { vehicles, isLoading, refetch } = useVehicles(params);
   const [search, setSearch] = React.useState('');
   const [isFormOpen, setFormOpen] = React.useState(false);
   const [editV, setEditV] = React.useState<Vehicle | null>(null);
@@ -271,15 +271,15 @@ function SettingsView() {
 export default function AdminPanel() {
   const { user } = useAuth();
   const [params] = useState<VehicleQueryParams>({ page: 1, limit: 50, sortBy: 'createdAt', sortOrder: 'desc' });
-  const { vehicles, total, isLoading } = useVehicles(params);
+  const { vehicles } = useVehicles(params);
   const [activeSection, setActiveSection] = useState<'overview' | 'inventory' | 'users' | 'analytics' | 'settings'>('overview');
 
   const stats = useMemo(() => {
     const value = vehicles.reduce((s, v) => s + Number(v.price) * v.quantity, 0);
     const inStock = vehicles.filter(v => v.quantity > 0).length;
     const lowStock = vehicles.filter(v => v.quantity > 0 && v.quantity <= 5).length;
-    return { total: total || vehicles.length, inStock, lowStock, value };
-  }, [vehicles, total]);
+    return { total: vehicles.length, inStock, lowStock, value };
+  }, [vehicles]);
 
   const fmt = (n: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', notation: 'compact', maximumFractionDigits: 1 }).format(n);
 
@@ -289,10 +289,7 @@ export default function AdminPanel() {
     // We handle clicks via activeSection state to avoid full page nav for sub-pages
   }));
 
-  const SECTION_TITLES: Record<string, string> = {
-    overview: 'Command Center', inventory: 'Vehicle Inventory', users: 'User Management',
-    brands: 'Brand Management', bookings: 'Bookings', analytics: 'Analytics', reports: 'Reports', settings: 'System Settings'
-  };
+
 
   return (
     <DashboardLayout navItems={navWithAction} role="ADMIN" title="Admin Portal" subtitle="Full System Control">

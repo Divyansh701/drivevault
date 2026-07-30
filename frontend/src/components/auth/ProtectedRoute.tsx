@@ -1,8 +1,9 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import type { ReactNode } from 'react';
 import { useAuth } from '@/context';
+import type { AppRole } from '@/types';
 
-type AllowedRole = 'ADMIN' | 'STAFF' | 'DEALER' | 'VIEWER' | 'CUSTOMER';
+type AllowedRole = AppRole;
 
 interface ProtectedRouteProps {
   children: ReactNode;

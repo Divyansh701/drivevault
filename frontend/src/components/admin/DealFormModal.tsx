@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, FormField, Button, Alert } from '@/components/ui';
+import { Modal, Alert } from '@/components/ui';
 import { dealService } from '@/services';
 import { vehicleService } from '@/services/vehicleService';
 import type { Deal, CreateDealDto, UpdateDealDto, Vehicle } from '@/types';

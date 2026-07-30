@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { Link } from 'react-router-dom';
 
