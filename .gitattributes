@@ -1,0 +1,14 @@
+# Enforce LF line endings in the repository for all text files.
+# This prevents diff noise when contributors work across Windows and Unix.
+* text=auto eol=lf
+
+# Explicitly mark binary files so Git never tries to do line-ending conversion
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.woff binary
+*.woff2 binary
+*.ttf  binary
+*.eot  binary
