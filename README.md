@@ -2,6 +2,25 @@
 A full-stack vehicle inventory and dealership management platform.
 Under active development.
 
+## Project Overview
+
+**DriveVault** is a modern **full-stack Vehicle Inventory & Dealership Management Platform** designed to streamline dealership operations through a secure, scalable, and user-friendly web application. It provides a centralized system for managing vehicle inventory, dealership staff, customers, and public vehicle listings while enforcing **Role-Based Access Control (RBAC)** to ensure users only access features relevant to their assigned roles.
+Built with a **React + TypeScript** frontend, **Node.js + Express + TypeScript** backend, and **MongoDB Atlas** for data persistence, DriveVault follows industry-standard software engineering practices including **Clean Architecture**, **SOLID principles**, and **Test-Driven Development (TDD)**. The application emphasizes maintainability, scalability, security, and code quality, making it suitable for real-world dealership environments.
+
+### Key Features
+- 🔐 Secure JWT-based Authentication & Authorization
+- 👥 Role-Based Access Control (Administrator, Dealer, Staff, Customer, Viewer)
+- 🚗 Complete Vehicle Inventory Management (Create, Read, Update, Delete)
+- 🔍 Vehicle Search, Filtering, and Sorting
+- 📸 Vehicle Image Management
+- 📊 Dedicated Dashboards for Different User Roles
+- ❤️ Customer Wishlist Functionality
+- 📱 Responsive and Modern User Interface
+- ☁️ Cloud Deployment using **Vercel**, **Render**, and **MongoDB Atlas**
+
+### Project Goals
+The primary objective of DriveVault is to provide dealerships with a secure, scalable, and maintainable inventory management solution while delivering a seamless browsing experience for customers. Beyond implementing business functionality, the project demonstrates modern full-stack development practices, clean software architecture, and production-ready deployment workflows.
+
 ## A Personal Note
 This project is more than a coding assessment—it's a challenge to step outside my comfort zone.
 Although this technology stack is new to me, I believe that a software engineer's ability to learn, adapt, and solve problems is just as important as prior experience. Over the next 48 hours, I'll be building this application while learning new concepts, making mistakes, improving the implementation, and documenting the entire process. The goal isn't just to finish the project, but to demonstrate curiosity, discipline, and continuous learning.
@@ -527,5 +546,52 @@ npm install
 ```
 
 ## License
-
 This project is being developed as part of a company technical assessment.
+
+# My AI Usage
+
+## **AI Tools Used**
+
+Throughout the development of this project, I used the following AI tools as development assistants:
+
+- **ChatGPT (OpenAI)**
+- **Kiro (powered by Claude)**
+- **Antigravity (powered by Google Gemini Flash)**
+
+## **How I Used AI**
+
+### **ChatGPT**
+I primarily used ChatGPT as a technical planning and engineering assistant. Specifically, I used it to:
+
+- Break down project requirements into manageable implementation phases.
+- Plan the overall application architecture.
+- Generate and refine development prompts for AI-assisted coding.
+- Review backend and frontend architecture for adherence to SOLID principles and Clean Architecture.
+- Debug deployment issues related to Vercel, Render, MongoDB Atlas, and CORS configuration.
+- Understand and resolve TypeScript, React, Express, and deployment errors.
+- Improve documentation, commit messages, and project organization.
+- Validate implementation decisions and discuss best practices before applying changes.
+
+### **Kiro (powered by Claude)**
+Kiro served as my primary AI-assisted development environment during implementation. I used it to:
+
+- Generate backend boilerplate following Clean Architecture principles.
+- Implement business logic, API endpoints, repositories, and services.
+- Build frontend React components and pages.
+- Generate and improve TypeScript interfaces and reusable components.
+- Assist with refactoring while maintaining SOLID principles.
+- Help create and organize tests following a Test-Driven Development (TDD) workflow.
+- Review code structure and improve maintainability.
+
+### **Antigravity (powered by Google Gemini Flash)**
+I used Antigravity to accelerate repository management and development workflows, including:
+
+- Assisting with structured project implementation.
+- Helping reconstruct a meaningful Git commit history that reflected a realistic development process.
+- Supporting code generation and iterative improvements during implementation.
+- Assisting with repository organization and project refinement.
+
+## **Reflection**
+Using AI significantly improved my productivity by allowing me to spend more time understanding system design, architecture, debugging, and decision-making rather than writing repetitive boilerplate code. AI accelerated tasks such as project planning, code scaffolding, debugging, and documentation, while I remained responsible for reviewing, integrating, testing, and validating every generated solution.
+
+Throughout the project, I treated AI as a collaborative development assistant rather than a replacement for software engineering judgment. Every AI-generated suggestion was reviewed, adapted where necessary, and integrated into the project only after ensuring it aligned with the project's architecture, coding standards, and functional requirements. This workflow enabled faster development while maintaining code quality, consistency, and a deeper understanding of the technologies used.
