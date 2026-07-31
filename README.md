@@ -595,3 +595,12 @@ I used Antigravity to accelerate repository management and development workflows
 Using AI significantly improved my productivity by allowing me to spend more time understanding system design, architecture, debugging, and decision-making rather than writing repetitive boilerplate code. AI accelerated tasks such as project planning, code scaffolding, debugging, and documentation, while I remained responsible for reviewing, integrating, testing, and validating every generated solution.
 
 Throughout the project, I treated AI as a collaborative development assistant rather than a replacement for software engineering judgment. Every AI-generated suggestion was reviewed, adapted where necessary, and integrated into the project only after ensuring it aligned with the project's architecture, coding standards, and functional requirements. This workflow enabled faster development while maintaining code quality, consistency, and a deeper understanding of the technologies used.
+
+# Images
+
+<img width="1917" height="933" alt="Screenshot 2026-07-31 080403" src="https://github.com/user-attachments/assets/b6f47dbd-7f28-4967-a0c0-c0b3c68edaf4" />
+<img width="1636" height="711" alt="Screenshot 2026-07-30 215540" src="https://github.com/user-attachments/assets/8ac4558c-184e-458d-9d82-3c64cc4d00ef" />
+<img width="1593" height="592" alt="Screenshot 2026-07-30 215530" src="https://github.com/user-attachments/assets/d16f04a5-e012-4af4-b053-ab68d33c76f1" />
+<img width="1622" height="588" alt="Screenshot 2026-07-30 215524" src="https://github.com/user-attachments/assets/1c1dc392-1003-43d9-a6ae-6903356d74c0" />
+<img width="1917" height="1078" alt="Screenshot 2026-07-30 215210" src="https://github.com/user-attachments/assets/93435e52-74a0-4a9b-9b42-5ac8c93baab2" />
+<img width="1917" height="1077" alt="Screenshot 2026-07-30 215055" src="https://github.com/user-attachments/assets/e48d2d44-c3b6-48f9-849f-9215fe7edd12" />
