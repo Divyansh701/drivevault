@@ -41,6 +41,19 @@ function ABtn({ label, color, onClick, icon }: { label: string; color: string; o
   );
 }
 
+function QuickActionCard({ label, desc, action, color }: { label: string; desc: string; action: () => void; color: string }) {
+  const [h, setH] = React.useState(false);
+  return (
+    <div onClick={action} onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)}
+      style={{ padding: '20px 22px', background: h ? `${color}10` : 'rgba(8,12,24,0.7)',
+        border: `1px solid ${h ? color + '40' : 'rgba(255,255,255,0.06)'}`,
+        cursor: 'pointer', transition: 'all 0.3s', transform: h ? 'translateY(-2px)' : 'none' }}>
+      <div style={{ color, fontSize: 10, letterSpacing: 2, textTransform: 'uppercase', marginBottom: 6 }}>{label}</div>
+      <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 12, margin: 0 }}>{desc}</p>
+    </div>
+  );
+}
+
 // ─── User Management mock data ────────────────────────────────────────────────
 const MOCK_USERS = [
   { id: '1', name: 'John Carter', email: 'john@divi.com', role: 'VIEWER', status: 'Active', joined: '2024-01-15' },
@@ -337,18 +350,9 @@ export default function AdminPanel() {
                 { label: 'Manage Users', desc: 'View, edit, remove users', action: () => setActiveSection('users'), color: '#38bdf8' },
                 { label: 'View Analytics', desc: 'Stock levels, performance', action: () => setActiveSection('analytics'), color: '#C9A84C' },
                 { label: 'System Settings', desc: 'Configure platform options', action: () => setActiveSection('settings'), color: '#34d399' },
-              ].map(qa => {
-                const [h, setH] = React.useState(false);
-                return (
-                  <div key={qa.label} onClick={qa.action} onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)}
-                    style={{ padding: '20px 22px', background: h ? `${qa.color}10` : 'rgba(8,12,24,0.7)',
-                      border: `1px solid ${h ? qa.color + '40' : 'rgba(255,255,255,0.06)'}`,
-                      cursor: 'pointer', transition: 'all 0.3s', transform: h ? 'translateY(-2px)' : 'none' }}>
-                    <div style={{ color: qa.color, fontSize: 10, letterSpacing: 2, textTransform: 'uppercase', marginBottom: 6 }}>{qa.label}</div>
-                    <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 12, margin: 0 }}>{qa.desc}</p>
-                  </div>
-                );
-              })}
+              ].map(qa => (
+                <QuickActionCard key={qa.label} label={qa.label} desc={qa.desc} action={qa.action} color={qa.color} />
+              ))}
             </div>
           </div>
         )}
