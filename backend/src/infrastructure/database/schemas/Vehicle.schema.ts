@@ -12,6 +12,7 @@ export enum VehicleCategory {
   COUPE = 'COUPE',
   VAN = 'VAN',
   MOTORCYCLE = 'MOTORCYCLE',
+  SUPERCAR = 'SUPERCAR',
 }
 
 /**

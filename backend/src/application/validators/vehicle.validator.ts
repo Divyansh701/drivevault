@@ -11,7 +11,7 @@ import { z } from 'zod';
 
 const VEHICLE_CATEGORIES = [
   'SEDAN', 'SUV', 'TRUCK', 'HATCHBACK',
-  'CONVERTIBLE', 'COUPE', 'VAN', 'MOTORCYCLE',
+  'CONVERTIBLE', 'COUPE', 'VAN', 'MOTORCYCLE', 'SUPERCAR',
 ] as const;
 
 const POWERTRAIN_TYPES = [

@@ -272,7 +272,7 @@ export default function CustomerDashboard() {
             padding: '9px 12px', background: 'rgba(8,12,24,0.8)', border: '1px solid rgba(255,255,255,0.08)',
             color: '#fff', fontSize: 12, fontFamily: 'Inter, sans-serif', cursor: 'pointer', outline: 'none' }}>
             <option value="">All Categories</option>
-            {['SEDAN','SUV','TRUCK','HATCHBACK','CONVERTIBLE','COUPE','VAN','MOTORCYCLE'].map(c => (
+            {['SEDAN','SUV','TRUCK','HATCHBACK','CONVERTIBLE','COUPE','VAN','MOTORCYCLE','SUPERCAR'].map(c => (
               <option key={c} value={c}>{c}</option>
             ))}
           </select>

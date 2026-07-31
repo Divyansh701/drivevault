@@ -28,6 +28,7 @@ const CATEGORIES = [
   { label: 'Coupe', value: 'COUPE' },
   { label: 'Van', value: 'VAN' },
   { label: 'Motorcycle', value: 'MOTORCYCLE' },
+  { label: 'Supercar', value: 'SUPERCAR' },
 ];
 
 const SORT_OPTIONS = [

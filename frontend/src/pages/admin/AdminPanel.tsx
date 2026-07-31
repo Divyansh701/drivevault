@@ -205,7 +205,7 @@ function UsersView() {
 
 // ─── Analytics sub-view ───────────────────────────────────────────────────────
 function AnalyticsView({ vehicles }: { vehicles: Vehicle[] }) {
-  const cats = ['SEDAN','SUV','TRUCK','HATCHBACK','CONVERTIBLE','COUPE'];
+  const cats = ['SEDAN','SUV','TRUCK','HATCHBACK','CONVERTIBLE','COUPE','SUPERCAR'];
   const maxQty = Math.max(...vehicles.map(v => v.quantity), 1);
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>

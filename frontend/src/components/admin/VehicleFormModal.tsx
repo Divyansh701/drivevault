@@ -12,7 +12,7 @@ interface VehicleFormModalProps {
 
 const CATEGORIES = [
   'SEDAN', 'SUV', 'TRUCK', 'HATCHBACK',
-  'CONVERTIBLE', 'COUPE', 'VAN', 'MOTORCYCLE',
+  'CONVERTIBLE', 'COUPE', 'VAN', 'MOTORCYCLE', 'SUPERCAR',
 ];
 
 const POWERTRAINS = [

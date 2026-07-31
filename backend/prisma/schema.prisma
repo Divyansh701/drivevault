@@ -47,6 +47,7 @@ enum VehicleCategory {
   COUPE        // 2-door sporty body (e.g. BMW M4)
   VAN          // Cargo or passenger van (e.g. Mercedes Sprinter)
   MOTORCYCLE   // Two-wheeled motorised vehicle
+  SUPERCAR     // High-performance exotic sports car
 }
 
 /// Fuel / drive system of a vehicle — orthogonal to body style.
