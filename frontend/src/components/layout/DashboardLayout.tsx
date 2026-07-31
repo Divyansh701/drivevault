@@ -36,8 +36,8 @@ export function DashboardLayout({ children, navItems, role, title, subtitle }: D
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const resolvedRole: AppRole = role ?? 'VIEWER';
-  const col = ROLE_COLOR[resolvedRole];
+  const resolvedRole = role && ROLE_COLOR[role as AppRole] ? role : 'VIEWER';
+  const col = ROLE_COLOR[resolvedRole as AppRole];
 
   const handleLogout = () => {
     logout();
