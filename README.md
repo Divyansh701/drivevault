@@ -194,14 +194,13 @@ This migration validated the architectural decisions made throughout the project
 - **Routing**: React Router v6
 - **HTTP Client**: Fetch API with custom hooks
 
-## Prerequisites
-
+## Prerequisites 
+# How to Run - 
 Before running this application, ensure you have the following installed:
-
 - **Node.js** (v20.x or higher)
 - **npm** (v10.x or higher)
 - **MongoDB** (v6.0 or higher)
-  - You can install MongoDB locally or use [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) (cloud-hosted)
+- You can install MongoDB locally or use [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) (cloud-hosted)
 
 ## Installation & Setup
 
