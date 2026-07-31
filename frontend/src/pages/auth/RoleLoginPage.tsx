@@ -54,10 +54,44 @@ export default function RoleLoginPage({ role }: { role: Role }) {
     try {
       await login(email.trim(), password);
       const stored = authService.getStoredUser();
-      const dest = locationFrom
-        ?? (stored?.role === 'ADMIN' ? '/admin/dashboard'
-          : (stored?.role === 'STAFF' || stored?.role === 'DEALER') ? '/dealer/dashboard'
-          : '/customer/dashboard');
+
+      // ── Role-portal mismatch guard ────────────────────────────────────────
+      // Prevent a non-admin from logging in through the admin portal and
+      // a non-staff/dealer from logging in through the staff portal.
+      if (role === 'admin' && stored?.role !== 'ADMIN') {
+        authService.logout();
+        setApiError(
+          `This portal is for Administrators only. Your account role is "${stored?.role ?? 'UNKNOWN'}". ` +
+          `Please use the correct portal.`
+        );
+        setLoading(false);
+        return;
+      }
+      if (role === 'staff' && stored?.role !== 'STAFF' && stored?.role !== 'DEALER') {
+        authService.logout();
+        setApiError(
+          `This portal is for Dealers / Staff only. Your account role is "${stored?.role ?? 'UNKNOWN'}". ` +
+          `Please use the correct portal.`
+        );
+        setLoading(false);
+        return;
+      }
+
+      // ── Role-based destination ────────────────────────────────────────────
+      // Always derive the destination from the actual stored role so that a
+      // stale `locationFrom` (e.g. /customer from a previous visit) never
+      // overrides the correct admin/staff dashboard.
+      const roleDest =
+        stored?.role === 'ADMIN'
+          ? '/admin/dashboard'
+          : stored?.role === 'STAFF' || stored?.role === 'DEALER'
+          ? '/dealer/dashboard'
+          : '/customer/dashboard';
+
+      // Only honour locationFrom for customer logins where the user was
+      // redirected from a specific protected customer page.
+      const dest = (role === 'user' && locationFrom) ? locationFrom : roleDest;
+
       navigate(dest, { replace: true });
     } catch (err) {
       setApiError((err as ApiError).message ?? 'Invalid credentials. Please try again.');
